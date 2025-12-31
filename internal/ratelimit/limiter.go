@@ -58,7 +58,6 @@ type TwoTierRateLimiter struct {
 	ipBuckets     sync.Map // map[string]*TokenBucket
 	perIPCapacity int64
 	perIPRate     int64
-	mutex         sync.RWMutex
 }
 
 // NewTwoTierRateLimiter creates a new two-tier rate limiter

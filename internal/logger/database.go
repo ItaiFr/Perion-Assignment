@@ -136,7 +136,7 @@ func (s *SupabaseConnection) InsertLog(ctx context.Context, entry *models.LogEnt
 
 	// Convert metadata to JSON string for JSONB if present
 	var metadata interface{}
-	if entry.Metadata != nil && len(entry.Metadata) > 0 {
+	if len(entry.Metadata) > 0 {
 		// Marshal to JSON string for proper JSONB encoding
 		jsonBytes, err := json.Marshal(entry.Metadata)
 		if err != nil {

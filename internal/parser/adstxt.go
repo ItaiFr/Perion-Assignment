@@ -111,9 +111,7 @@ func (p *Parser) isValidDomain(domain string) bool {
 	}
 	
 	// Handle trailing dot (valid in DNS)
-	if strings.HasSuffix(domain, ".") {
-		domain = strings.TrimSuffix(domain, ".")
-	}
+	domain = strings.TrimSuffix(domain, ".")
 	
 	// Must contain at least one dot and be more than single character
 	if !strings.Contains(domain, ".") || len(domain) <= 1 {

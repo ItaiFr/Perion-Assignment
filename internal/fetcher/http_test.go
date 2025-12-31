@@ -65,7 +65,7 @@ func TestHTTPFetcher_Fetch_Success(t *testing.T) {
 		assert.Equal(t, "text/plain", r.Header.Get("Accept"))
 
 		w.WriteHeader(http.StatusOK)
-		w.Write([]byte("google.com, pub-123456, DIRECT, abc123\nexample.com, pub-789, RESELLER"))
+		_, _ = w.Write([]byte("google.com, pub-123456, DIRECT, abc123\nexample.com, pub-789, RESELLER"))
 	}))
 	defer server.Close()
 
@@ -196,7 +196,7 @@ func TestHTTPFetcher_Fetch_BodySizeLimit(t *testing.T) {
 		w.WriteHeader(http.StatusOK)
 		// Write 2MB of data
 		largeContent := strings.Repeat("a", 2*1024*1024)
-		w.Write([]byte(largeContent))
+		_, _ = w.Write([]byte(largeContent))
 	}))
 	defer server.Close()
 
@@ -248,7 +248,7 @@ func TestHTTPFetcher_Fetch_Redirect(t *testing.T) {
 			return
 		}
 		w.WriteHeader(http.StatusOK)
-		w.Write([]byte("google.com, pub-123456, DIRECT, abc123"))
+		_, _ = w.Write([]byte("google.com, pub-123456, DIRECT, abc123"))
 	}))
 	defer server.Close()
 

@@ -377,7 +377,7 @@ func TestResponseWriter_DefaultStatusCode(t *testing.T) {
 	wrapped := &responseWriter{ResponseWriter: w, statusCode: http.StatusOK}
 
 	// Act - write without explicit WriteHeader
-	wrapped.Write([]byte("test"))
+	_, _ = wrapped.Write([]byte("test"))
 
 	// Assert
 	assert.Equal(t, http.StatusOK, wrapped.statusCode) // Should remain default

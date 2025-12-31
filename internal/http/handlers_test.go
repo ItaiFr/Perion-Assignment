@@ -486,7 +486,8 @@ func TestHandler_AnalyzeSingleDomain_WithLogEvent(t *testing.T) {
 		StartTime:   time.Now().UTC(),
 		ClientIP:    "192.168.1.1",
 	}
-	ctx := context.WithValue(context.Background(), "logEvent", logEvent)
+	type contextKey string
+	ctx := context.WithValue(context.Background(), contextKey("logEvent"), logEvent)
 
 	// Setup mocks - use mock.Anything for context since mux.SetURLVars modifies it
 	mockLogger.On("LogInfo", mock.Anything, "domain_analysis", mock.AnythingOfType("string"), mock.Anything).Return()
