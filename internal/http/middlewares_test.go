@@ -30,11 +30,12 @@ func TestLoggingMiddleware_Success(t *testing.T) {
 		assert.Equal(t, "192.168.1.1", logEvent.ClientIP)
 
 		w.WriteHeader(http.StatusOK)
-		w.Write([]byte("success"))
+		_, _ = w.Write([]byte("success"))
 	})
 
 	// Setup mock - expect HTTP request log
-	mockLogger.On("LogInfo", mock.Anything, "http_request_start", "HTTP request received", mock.Anything).Return(); mockLogger.On("LogInfo", mock.Anything, "http_request_complete", "HTTP request processed", mock.MatchedBy(func(metadata map[string]interface{}) bool {
+	mockLogger.On("LogInfo", mock.Anything, "http_request_start", "HTTP request received", mock.Anything).Return()
+	mockLogger.On("LogInfo", mock.Anything, "http_request_complete", "HTTP request processed", mock.MatchedBy(func(metadata map[string]interface{}) bool {
 		return metadata["method"] == "GET" &&
 			metadata["path"] == "/test" &&
 			metadata["status_code"] == 200 &&
@@ -72,7 +73,8 @@ func TestLoggingMiddleware_WithHeaders(t *testing.T) {
 	})
 
 	// Setup mock
-	mockLogger.On("LogInfo", mock.Anything, "http_request_start", "HTTP request received", mock.Anything).Return(); mockLogger.On("LogInfo", mock.Anything, "http_request_complete", "HTTP request processed", mock.MatchedBy(func(metadata map[string]interface{}) bool {
+	mockLogger.On("LogInfo", mock.Anything, "http_request_start", "HTTP request received", mock.Anything).Return()
+	mockLogger.On("LogInfo", mock.Anything, "http_request_complete", "HTTP request processed", mock.MatchedBy(func(metadata map[string]interface{}) bool {
 		return metadata["method"] == "POST" &&
 			metadata["status_code"] == 201 &&
 			metadata["client_ip"] == "10.0.0.5" &&
@@ -125,7 +127,7 @@ func TestCorsMiddleware_RegularRequest(t *testing.T) {
 	// Arrange
 	testHandler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
-		w.Write([]byte("success"))
+		_, _ = w.Write([]byte("success"))
 	})
 
 	middleware := corsMiddleware()
@@ -193,7 +195,7 @@ func TestRecoveryMiddleware_NoPanic(t *testing.T) {
 
 	normalHandler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
-		w.Write([]byte("success"))
+		_, _ = w.Write([]byte("success"))
 	})
 
 	middleware := recoveryMiddleware(mockLogger)
@@ -221,7 +223,7 @@ func TestRateLimitingMiddleware_Allowed(t *testing.T) {
 
 	testHandler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
-		w.Write([]byte("success"))
+		_, _ = w.Write([]byte("success"))
 	})
 
 	clientIP := "192.168.1.1"
@@ -397,13 +399,14 @@ func TestMiddlewareChain_Integration(t *testing.T) {
 		assert.Equal(t, "192.168.1.1", logEvent.ClientIP)
 
 		w.WriteHeader(http.StatusOK)
-		w.Write([]byte("success"))
+		_, _ = w.Write([]byte("success"))
 	})
 
 	clientIP := "192.168.1.1"
 
 	// Setup mocks
-	mockLogger.On("LogInfo", mock.Anything, "http_request_start", "HTTP request received", mock.Anything).Return(); mockLogger.On("LogInfo", mock.Anything, "http_request_complete", "HTTP request processed", mock.MatchedBy(func(metadata map[string]interface{}) bool {
+	mockLogger.On("LogInfo", mock.Anything, "http_request_start", "HTTP request received", mock.Anything).Return()
+	mockLogger.On("LogInfo", mock.Anything, "http_request_complete", "HTTP request processed", mock.MatchedBy(func(metadata map[string]interface{}) bool {
 		return metadata["status_code"] == 200
 	})).Return()
 	mockRateLimiter.On("Allow", clientIP).Return(true)
@@ -449,7 +452,8 @@ func TestMiddlewareChain_WithPanicAndRateLimit(t *testing.T) {
 	clientIP := "192.168.1.1"
 
 	// Setup mocks
-	mockLogger.On("LogInfo", mock.Anything, "http_request_start", "HTTP request received", mock.Anything).Return(); mockLogger.On("LogInfo", mock.Anything, "http_request_complete", "HTTP request processed", mock.MatchedBy(func(metadata map[string]interface{}) bool {
+	mockLogger.On("LogInfo", mock.Anything, "http_request_start", "HTTP request received", mock.Anything).Return()
+	mockLogger.On("LogInfo", mock.Anything, "http_request_complete", "HTTP request processed", mock.MatchedBy(func(metadata map[string]interface{}) bool {
 		return metadata["status_code"] == 500 // Panic results in 500
 	})).Return()
 	mockRateLimiter.On("Allow", clientIP).Return(true)

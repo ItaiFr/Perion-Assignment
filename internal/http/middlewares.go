@@ -12,6 +12,7 @@ import (
 	"Perion_Assignment/internal/logger"
 	"Perion_Assignment/internal/models"
 	"Perion_Assignment/internal/ratelimit"
+
 	"github.com/gorilla/mux"
 )
 
@@ -51,11 +52,11 @@ func loggingMiddleware(loggerService logger.Service) func(http.Handler) http.Han
 
 			// Log the initial request with full details
 			requestMetadata := map[string]interface{}{
-				"method":      r.Method,
-				"path":        r.URL.Path,
-				"query":       r.URL.RawQuery,
-				"user_agent":  r.UserAgent(),
-				"client_ip":   clientIP,
+				"method":     r.Method,
+				"path":       r.URL.Path,
+				"query":      r.URL.RawQuery,
+				"user_agent": r.UserAgent(),
+				"client_ip":  clientIP,
 			}
 
 			// Add URL params if any
@@ -136,7 +137,7 @@ func recoveryMiddleware(loggerService logger.Service) func(http.Handler) http.Ha
 					w.Header().Set("Content-Type", "application/json")
 					w.Header().Set("X-Request-ID", logEvent.ProcessID)
 					w.WriteHeader(http.StatusInternalServerError)
-					w.Write([]byte(`{"error":"internal server error","message":"An unexpected error occurred"}`))
+					_, _ = w.Write([]byte(`{"error":"internal server error","message":"An unexpected error occurred"}`))
 				}
 			}()
 
@@ -151,11 +152,11 @@ func rateLimitingMiddleware(rateLimiter ratelimit.Service, loggerService logger.
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			ctx := r.Context()
-			
+
 			// Get LogEvent from context (created by logging middleware)
 			logEvent := logger.GetLogEvent(ctx)
 			clientIP := logEvent.ClientIP
-			
+
 			// Check rate limiting
 			if !rateLimiter.Allow(clientIP) {
 				loggerService.LogError(ctx, logger.OpRateLimited, "", "Rate limit exceeded", models.ErrRateLimitExceeded, models.LogSeverityMedium, map[string]interface{}{
@@ -167,10 +168,10 @@ func rateLimitingMiddleware(rateLimiter ratelimit.Service, loggerService logger.
 				w.Header().Set("X-Request-ID", logEvent.ProcessID)
 				w.Header().Set("X-RateLimit-Retry-After", "1")
 				w.WriteHeader(http.StatusTooManyRequests)
-				w.Write([]byte(`{"error":"rate limit exceeded","message":"Please try again later"}`))
+				_, _ = w.Write([]byte(`{"error":"rate limit exceeded","message":"Please try again later"}`))
 				return
 			}
-			
+
 			// Continue to next middleware/handler
 			next.ServeHTTP(w, r)
 		})
@@ -198,17 +199,17 @@ func getClientIP(r *http.Request) string {
 			return strings.TrimSpace(ips[0])
 		}
 	}
-	
+
 	// Check X-Real-IP header
 	if xri := r.Header.Get("X-Real-IP"); xri != "" {
 		return xri
 	}
-	
+
 	// Fall back to remote address
 	host, _, err := net.SplitHostPort(r.RemoteAddr)
 	if err != nil {
 		return r.RemoteAddr
 	}
-	
+
 	return host
 }

@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"Perion_Assignment/internal/models"
+
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -410,7 +411,7 @@ func TestHTTPFetcher_Fetch_CancelledContext(t *testing.T) {
 func BenchmarkHTTPFetcher_Fetch(b *testing.B) {
 	server := httptest.NewTLSServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
-		w.Write([]byte("google.com, pub-123456, DIRECT, abc123"))
+		_, _ = w.Write([]byte("google.com, pub-123456, DIRECT, abc123"))
 	}))
 	defer server.Close()
 
@@ -525,7 +526,7 @@ func TestHTTPFetcher_CheckRedirect_TooManyRedirects(t *testing.T) {
 func TestHTTPFetcher_Fetch_WithDifferentProtocols(t *testing.T) {
 	server := httptest.NewTLSServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
-		w.Write([]byte("google.com, pub-123, DIRECT"))
+		_, _ = w.Write([]byte("google.com, pub-123, DIRECT"))
 	}))
 	defer server.Close()
 

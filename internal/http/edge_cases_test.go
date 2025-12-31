@@ -168,7 +168,7 @@ func TestRateLimitingMiddleware_NoLogEventInContext(t *testing.T) {
 
 	testHandler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
-		w.Write([]byte("success"))
+		_, _ = w.Write([]byte("success"))
 	})
 
 	// Setup mock - even without log event, rate limiter should be called with some IP
@@ -301,7 +301,8 @@ func TestMiddlewareChain_ComplexErrorScenario(t *testing.T) {
 	clientIP := "192.168.1.1"
 
 	// Setup mocks
-	mockLogger.On("LogInfo", mock.Anything, "http_request_start", "HTTP request received", mock.Anything).Return(); mockLogger.On("LogInfo", mock.Anything, "http_request_complete", "HTTP request processed", mock.Anything).Return()
+	mockLogger.On("LogInfo", mock.Anything, "http_request_start", "HTTP request received", mock.Anything).Return()
+	mockLogger.On("LogInfo", mock.Anything, "http_request_complete", "HTTP request processed", mock.Anything).Return()
 	mockRateLimiter.On("Allow", clientIP).Return(true) // Allow, but handler will panic
 	mockLogger.On("LogError", mock.Anything, "panic_recovery", "", "Panic recovered in HTTP handler", mock.AnythingOfType("*errors.errorString"), models.LogSeverityHigh, mock.Anything).Return()
 

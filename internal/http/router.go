@@ -7,6 +7,7 @@ import (
 
 	"Perion_Assignment/internal/logger"
 	"Perion_Assignment/internal/ratelimit"
+
 	"github.com/gorilla/mux"
 )
 
@@ -28,7 +29,7 @@ func NewServer(
 	// Create Gorilla mux router
 	router := mux.NewRouter()
 
-	// Create server 
+	// Create server
 	srv := &Server{
 		handler: handler,
 		logger:  logger,
@@ -65,7 +66,7 @@ func (s *Server) registerRoutes(router *mux.Router) {
 	router.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
-		w.Write([]byte(`{"message":"AdsTxt Analysis API","version":"1.0.0","endpoints":["/health","/api/analyze/{domain}","/api/batch-analysis"]}`))
+		_, _ = w.Write([]byte(`{"message":"AdsTxt Analysis API","version":"1.0.0","endpoints":["/health","/api/analyze/{domain}","/api/batch-analysis"]}`))
 	}).Methods("GET")
 }
 
