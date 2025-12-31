@@ -1,0 +1,42 @@
+# Binaries
+*.exe
+*.dll
+*.so
+*.dylib
+adstxt-api
+Perion_Assignment
+
+# Test and coverage files
+*.test
+*.out
+coverage*.out
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Claude workspace
+.claude/
+
+# Temporary directories
+internaldomainAnalysis/
+internaldomainAnalysismocks/
+
+# Logs
+*.log
+app.log
+
+# Go workspace file
+go.work
+go.work.sum
+
+# NOTE: .env is intentionally tracked for assignment demo purposes
+# In production, uncomment the line below:
+# .env
