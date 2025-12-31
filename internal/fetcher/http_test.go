@@ -306,7 +306,7 @@ func TestHTTPFetcher_Fetch_MultipleRequests(t *testing.T) {
 	server := httptest.NewTLSServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		requestCount++
 		w.WriteHeader(http.StatusOK)
-		w.Write([]byte(fmt.Sprintf("Request #%d", requestCount)))
+		_, _ = w.Write([]byte(fmt.Sprintf("Request #%d", requestCount)))
 	}))
 	defer server.Close()
 
@@ -328,7 +328,7 @@ func TestHTTPFetcher_Fetch_MultipleRequests(t *testing.T) {
 func TestHTTPFetcher_Fetch_SpecialCharactersInContent(t *testing.T) {
 	server := httptest.NewTLSServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
-		w.Write([]byte("# Comment line\n google.com, pub-123, DIRECT\n\n"))
+		_, _ = w.Write([]byte("# Comment line\n google.com, pub-123, DIRECT\n\n"))
 	}))
 	defer server.Close()
 
@@ -389,7 +389,7 @@ func TestHTTPFetcher_ReadBodyWithLimit(t *testing.T) {
 func TestHTTPFetcher_Fetch_CancelledContext(t *testing.T) {
 	server := httptest.NewTLSServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
-		w.Write([]byte("content"))
+		_, _ = w.Write([]byte("content"))
 	}))
 	defer server.Close()
 

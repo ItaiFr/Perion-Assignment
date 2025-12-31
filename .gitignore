@@ -27,7 +27,7 @@ Thumbs.db
 
 # Temporary directories
 internaldomainAnalysis/
-internaldomainAnalysismocks/
+internaldomainAnalysismocks/http
 
 # Logs
 *.log
