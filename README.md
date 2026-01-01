@@ -546,7 +546,7 @@ CREATE INDEX idx_timestamp ON application_logs(timestamp DESC);
 ## 🚦 Quick Start
 
 ### Prerequisites
-- Go 1.21+
+- Go 1.24+
 - Docker & Docker Compose
 - PostgreSQL (if not using Docker)
 
@@ -716,21 +716,6 @@ All error responses include the `X-Request-ID` header for tracking and debugging
 - **Resource Limits**: File size limits, batch size limits, timeout protection
 
 ## 🚢 Production Deployment
-
-### Docker Deployment
-```bash
-# Build and deploy
-docker-compose up -d
-
-# Scale API instances
-docker-compose up -d --scale adstxt-api=3
-
-# View logs
-docker-compose logs -f adstxt-api
-```
-
-### Kubernetes Deployment
-See `k8s/` directory for Kubernetes manifests (if provided).
 
 ### Environment-Specific Configs
 
